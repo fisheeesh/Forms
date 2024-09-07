@@ -1,0 +1,72 @@
+<template>
+    <form>
+        <label for="email">Email</label>
+        <input type="email" id="email" required autocomplete="off" v-model="email" placeholder="name@gmail.com">
+
+        <label for="password">Password</label>
+        <input type="password" id="password" required autocomplete="off" v-model="password" placeholder="abc123">
+
+        <label for="">Roles</label>
+        <select v-model="role">
+            <option disabled value="">Select a role</option>
+            <option value="developer">Software Developer</option>
+            <option value="designer">Arthitecture Designer</option>
+        </select>
+    </form>
+    <p>Email - {{ email }}</p>
+    <p>Password - {{ password }}</p>
+    <p>Role - {{ role }}</p>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            email: "",
+            password: "",
+            role : ""
+        }
+    }
+}
+</script>
+
+<style>
+form {
+    max-width: 420px;
+    margin: 30px auto;
+    background: white;
+    text-align: left;
+    padding: 40px;
+    border-radius: 10px;
+}
+
+label {
+    color: #aaa;
+    display: inline-block;
+    margin: 25px 0 15px;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+input, select {
+    display: block;
+    padding: 10px 6px;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    color: #555;
+    transition: border-bottom 0.3s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-bottom: 2px solid #aaa;
+}
+
+input::placeholder {
+    color: #ddd;
+}
+</style>
