@@ -17,12 +17,33 @@
             <input type="checkbox" v-model="accept">
             <label for="">Accept Terms and Conditions</label>
         </div>
+
+        <!-- multiple checkboxes -->
+        <label for="">Choose Gender</label><br>
+        <div>
+            <input type="checkbox" v-model="gender" value="Male">
+            <label for="">Male</label>
+        </div>
+        <div>
+            <input type="checkbox" v-model="gender" value="Female">
+            <label for="">Female</label>
+        </div>
+        <div>
+            <input type="checkbox" v-model="gender" value="Gay">
+            <label for="">Gay</label>
+        </div>
+        <div>
+            <input type="checkbox" v-model="gender" value="Bisexual">
+            <label for="">Bisexual</label>
+        </div>
+
     </form>
 
     <p>Email - {{ email }}</p>
     <p>Password - {{ password }}</p>
     <p>Role - {{ role }}</p>
     <p>Accept - {{ accept }}</p>
+    <p>Gender - {{ gender }}</p>
 
 </template>
 
@@ -32,8 +53,9 @@ export default {
         return {
             email: "",
             password: "",
-            role : "",
-            accept : false
+            role: "",
+            accept: false,
+            gender : []
         }
     }
 }
@@ -59,7 +81,8 @@ label {
     font-weight: bold;
 }
 
-input, select {
+input,
+select {
     display: block;
     padding: 10px 6px;
     width: 100%;
@@ -70,7 +93,7 @@ input, select {
     transition: border-bottom 0.3s ease;
 }
 
-input[type="checkbox"]{
+input[type="checkbox"] {
     display: inline-block;
     width: 16px;
     margin: 0 10px 0 0;
@@ -78,7 +101,8 @@ input[type="checkbox"]{
     top: 2px;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
     outline: none;
     border-bottom: 2px solid #aaa;
 }
