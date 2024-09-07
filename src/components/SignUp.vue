@@ -12,10 +12,18 @@
             <option value="developer">Software Developer</option>
             <option value="designer">Arthitecture Designer</option>
         </select>
+
+        <div>
+            <input type="checkbox" v-model="accept">
+            <label for="">Accept Terms and Conditions</label>
+        </div>
     </form>
+
     <p>Email - {{ email }}</p>
     <p>Password - {{ password }}</p>
     <p>Role - {{ role }}</p>
+    <p>Accept - {{ accept }}</p>
+
 </template>
 
 <script>
@@ -24,7 +32,8 @@ export default {
         return {
             email: "",
             password: "",
-            role : ""
+            role : "",
+            accept : false
         }
     }
 }
@@ -59,6 +68,14 @@ input, select {
     border-bottom: 1px solid #ddd;
     color: #555;
     transition: border-bottom 0.3s ease;
+}
+
+input[type="checkbox"]{
+    display: inline-block;
+    width: 16px;
+    margin: 0 10px 0 0;
+    position: relative;
+    top: 2px;
 }
 
 input:focus, select:focus {
