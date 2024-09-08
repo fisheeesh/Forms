@@ -4,7 +4,7 @@
         <input type="email" id="email" required autocomplete="off" v-model="email" placeholder="name@gmail.com">
 
         <label for="password">Password</label>
-        <input type="password" id="password" required autocomplete="off" v-model="password" placeholder="abc123">
+        <input type="password" id="password" required autocomplete="off" v-model="password" placeholder="abc123" :class="{pw:isErr}">
         <p v-if="errMsg" class="error">{{ errMsg }}</p>
 
         <label for="">Roles</label>
@@ -13,8 +13,6 @@
             <option value="developer">Software Developer</option>
             <option value="designer">Arthitecture Designer</option>
         </select>
-
-
 
         <div>
             <label for="">Skills</label>
@@ -50,20 +48,21 @@
 export default {
     data() {
         return {
-            email: "",
+            email: "name@gmail.com",
             password: "",
             role: "",
             accept: false,
             gender: [],
             skills: [],
             skill: "",
-            errMsg: ""
+            errMsg: "",
+            isErr : false
         }
     },
     methods: {
         addSkill(e) {
             // console.log(e.key)
-            if (e.key === "," && this.skill) {
+            if (e.key === "Alt" && this.skill) {
                 this.skills.push(this.skill)
                 this.skill = ""
             }
@@ -76,9 +75,12 @@ export default {
         Submit() {
             if (this.password.length < 8) {
                 this.errMsg = "Password must be at least 8 characters"
+                this.isErr = true
             }
             else {
                 console.log('submitted')
+                this.isErr = false
+                this.errMsg = ""
             }
         }
     }
@@ -139,6 +141,10 @@ input::placeholder {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
+}
+.pw{
+    border-bottom: 1px solid red;
+    transition: border-bottom 1s ease;
 }
 
 .skill {

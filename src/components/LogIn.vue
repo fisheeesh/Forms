@@ -1,11 +1,12 @@
 <template>
-    <form>
+    <form @submit.prevent="Submit">
 
         <label for="">Email</label>
         <input type="email" required autocomplete="off" v-model="email" placeholder="name@gmail.com">
 
         <label for="">Password</label>
-        <input type="password" required autocomplete="off" v-model="password" placeholder="abc123">
+        <input type="password" required autocomplete="off" v-model="password" placeholder="abc123" :class="{pw : isErr}">
+        <p v-if="errMsg" class="error">{{ errMsg }}</p>
 
         <label for="">Roles</label>
         <select v-model="role">
@@ -19,7 +20,7 @@
             <label for="">Accept Terms and Conditions</label>
         </div>
 
-        <p>Choose Gender</p>
+        <!-- <p>Choose Gender</p>
         <div>
             <input type="checkbox" value="Male" v-model="gender">
             <label for="">Male</label>
@@ -35,6 +36,21 @@
         <div>
             <input type="checkbox" value="Bisexual" v-model="gender">
             <label for="">Bisexual</label>
+        </div> -->
+
+        <div>
+            <label for="">Skills</label>
+            <input type="text" @keyup="addSkill" v-model="skill">
+        </div>
+
+        <div class="skillContainer">
+            <p v-for="skill in skills" :key="skill" class="skill">
+                {{ skill }} <span class="cross" @click="deleteSkill(skill)">&#10006;</span>
+            </p>
+        </div>
+
+        <div class="align">
+            <button>Create Account</button>
         </div>
 
     </form>
@@ -44,6 +60,7 @@
     <p>Role - {{ role }}</p>
     <p>Accept - {{ accept }}</p>
     <p>Gender : {{ gender }}</p>
+    <p>Skills : {{ skills }}</p>
 
 </template>
 
@@ -51,11 +68,40 @@
 export default {
     data() {
         return {
-            email: "",
+            email: "name@gmail.com",
             password: "",
             role: "",
-            accept : false,
-            gender : []
+            accept: false,
+            gender: [],
+            skills: [],
+            skill: "",
+            errMsg: "",
+            isErr: false
+        }
+    },
+    methods: {
+        addSkill(e) {
+            console.log(e.key)
+            if (e.key === "Alt" && this.skill) {
+                this.skills.push(this.skill)
+                this.skill = ""
+            }
+        },
+        deleteSkill(skill) {
+            this.skills = this.skills.filter(loopSkill => {
+                return loopSkill != skill
+            })
+        },
+        Submit() {
+            if (this.password.length < 8) {
+                this.errMsg = "Password must be at least 8 characters"
+                this.isErr = true
+            }
+            else {
+                console.log("Submitted")
+                this.isErr = false
+                this.errMsg = ""
+            }
         }
     }
 }
@@ -92,6 +138,9 @@ select {
     border-bottom: 1px solid #ddd;
     transition: border-bottom 0.3s ease;
 }
+.pw{
+    border-bottom: 1px solid red;
+}
 
 input[type="checkbox"] {
     display: inline-block;
@@ -106,7 +155,46 @@ select:focus {
     outline: none;
     border-bottom: 1px solid #aaa;
 }
+
 input::placeholder {
     color: #ddd;
+}
+
+.cross {
+    color: red;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.skillContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.skill {
+    display: inline-block;
+    padding: 10px 15px;
+    border: 1px solid #aaa;
+    margin: 10px 2px 0px 2px;
+    border-radius: 50px;
+}
+
+.align {
+    margin-top: 30px;
+    text-align: center;
+}
+
+button {
+    border: none;
+    background: royalblue;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer
+}
+
+.error {
+    color: red;
+    font-size: 0.6rem;
 }
 </style>
