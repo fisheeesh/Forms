@@ -57,7 +57,7 @@ export default {
     methods: {
         addSkill(e) {
             // console.log(e.key)
-            if (e.key === "Enter") {
+            if (e.key === "Enter" && this.skill) {
                 this.skills.push(this.skill)
                 this.skill = ""
             }
