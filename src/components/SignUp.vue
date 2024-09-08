@@ -18,23 +18,9 @@
             <label for="">Accept Terms and Conditions</label>
         </div>
 
-        <!-- multiple checkboxes -->
-        <label for="">Choose Gender</label><br>
         <div>
-            <input type="checkbox" v-model="gender" value="Male">
-            <label for="">Male</label>
-        </div>
-        <div>
-            <input type="checkbox" v-model="gender" value="Female">
-            <label for="">Female</label>
-        </div>
-        <div>
-            <input type="checkbox" v-model="gender" value="Gay">
-            <label for="">Gay</label>
-        </div>
-        <div>
-            <input type="checkbox" v-model="gender" value="Bisexual">
-            <label for="">Bisexual</label>
+            <label for="">Skills</label>
+            <input type="text" @keyup="addSkill" v-model="skill">
         </div>
 
     </form>
@@ -44,6 +30,7 @@
     <p>Role - {{ role }}</p>
     <p>Accept - {{ accept }}</p>
     <p>Gender - {{ gender }}</p>
+    <p>Skills - {{ skills }}</p>
 
 </template>
 
@@ -55,7 +42,18 @@ export default {
             password: "",
             role: "",
             accept: false,
-            gender : []
+            gender : [],
+            skills: [],
+            skill : ""
+        }
+    },
+    methods:{
+        addSkill(e){
+            console.log(e.key)
+            if(e.key === "Enter"){
+                this.skills.push(this.skill)
+                this.skill = ""
+            }
         }
     }
 }
