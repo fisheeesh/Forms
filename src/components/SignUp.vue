@@ -23,6 +23,12 @@
             <input type="text" @keyup="addSkill" v-model="skill">
         </div>
 
+        <div class="skillsContainer">
+            <p class="skill" v-for="skill in skills" :key="skill">
+                {{ skill }} <span class="cross" @click="deleteSkill(skill)">&#10006;</span>
+            </p>
+        </div>
+
     </form>
 
     <p>Email - {{ email }}</p>
@@ -42,18 +48,24 @@ export default {
             password: "",
             role: "",
             accept: false,
-            gender : [],
+            gender: [],
             skills: [],
-            skill : ""
+            skill: ""
+
         }
     },
-    methods:{
-        addSkill(e){
-            console.log(e.key)
-            if(e.key === "Enter"){
+    methods: {
+        addSkill(e) {
+            // console.log(e.key)
+            if (e.key === "Enter") {
                 this.skills.push(this.skill)
                 this.skill = ""
             }
+        },
+        deleteSkill(skill) {
+            this.skills = this.skills.filter(loopskill => {
+                return loopskill !== skill
+            })
         }
     }
 }
@@ -107,5 +119,29 @@ select:focus {
 
 input::placeholder {
     color: #ddd;
+}
+
+.skillsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.skill {
+    display: inline-block;
+    padding: 10px 15px;
+    border: 1px solid #aaa;
+    border-radius: 50px;
+    margin: 10px 2px;
+}
+
+.cross {
+    margin-left: 10px;
+    color: red;
+    font-size: 0.8rem;
+}
+
+.cross:hover {
+    cursor: pointer;
 }
 </style>
