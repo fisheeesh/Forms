@@ -1,10 +1,11 @@
 <template>
-    <form>
+    <form @submit.prevent="Submit">
         <label for="email">Email</label>
         <input type="email" id="email" required autocomplete="off" v-model="email" placeholder="name@gmail.com">
 
         <label for="password">Password</label>
         <input type="password" id="password" required autocomplete="off" v-model="password" placeholder="abc123">
+        <p v-if="errMsg" class="error">{{ errMsg }}</p>
 
         <label for="">Roles</label>
         <select v-model="role">
@@ -13,10 +14,7 @@
             <option value="designer">Arthitecture Designer</option>
         </select>
 
-        <div>
-            <input type="checkbox" v-model="accept">
-            <label for="">Accept Terms and Conditions</label>
-        </div>
+
 
         <div>
             <label for="">Skills</label>
@@ -27,6 +25,14 @@
             <p class="skill" v-for="skill in skills" :key="skill">
                 {{ skill }} <span class="cross" @click="deleteSkill(skill)">&#10006;</span>
             </p>
+        </div>
+        <div>
+            <input type="checkbox" v-model="accept">
+            <label for="">Accept Terms and Conditions</label>
+        </div>
+
+        <div class="align">
+            <button class="create">Create Account</button>
         </div>
 
     </form>
@@ -50,14 +56,14 @@ export default {
             accept: false,
             gender: [],
             skills: [],
-            skill: ""
-
+            skill: "",
+            errMsg: ""
         }
     },
     methods: {
         addSkill(e) {
             // console.log(e.key)
-            if (e.key === "Enter" && this.skill) {
+            if (e.key === "," && this.skill) {
                 this.skills.push(this.skill)
                 this.skill = ""
             }
@@ -66,6 +72,14 @@ export default {
             this.skills = this.skills.filter(loopskill => {
                 return loopskill !== skill
             })
+        },
+        Submit() {
+            if (this.password.length < 8) {
+                this.errMsg = "Password must be at least 8 characters"
+            }
+            else {
+                console.log('submitted')
+            }
         }
     }
 }
@@ -143,5 +157,23 @@ input::placeholder {
 
 .cross:hover {
     cursor: pointer;
+}
+
+.create {
+    background-color: royalblue;
+    padding: 15px 20px;
+    color: white;
+    border-radius: 10px;
+    border: none;
+
+}
+
+.align {
+    margin-top: 30px;
+    text-align: center;
+}
+.error{
+    font-size: 0.6rem;
+    color: red;
 }
 </style>
