@@ -21,7 +21,7 @@
 
         <div class="skillsContainer">
             <p class="skill" v-for="skill in skills" :key="skill">
-                {{ skill }} <span class="cross" @click="deleteSkill(skill)">&#10006;</span>
+                {{ skill }} <span class="cross" @click="deleteSkill(skill)"></span>
             </p>
         </div>
         <div>
