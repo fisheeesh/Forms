@@ -1,59 +1,62 @@
 <template>
+    <h2>LogIn Form</h2>
     <form @submit.prevent="Submit">
+        <!-- Email Input -->
+        <label>Email</label>
+        <input type="email" placeholder="name@gmail.com" v-model="email" :class="{ red: EisErr }">
+        <p v-if="EerrMsg" class="error">{{ EerrMsg }}</p>
 
-        <label for="">Email</label>
-        <input type="email" autocomplete="off" placeholder="name@gmail.com" v-model="email">
+        <!-- Password Input -->
+        <label>Password</label>
+        <input type="password" placeholder="abc123" v-model="password" :class="{ red: PisErr }">
+        <p v-if="PerrMsg" class="error">{{ PerrMsg }}</p>
 
-        <label for="">Password</label>
-        <input type="password" autocomplete="off" placeholder="abc123" v-model="password" :class="{pw : isError}" ref="pass">
-        <p v-if="isError" class="error">{{ errMsg }}</p>
-
-        <label for="">Role</label>
+        <!-- Select Box -->
+        <label>Role</label>
         <select v-model="role">
-            <option disabled value="">Select A Role</option>
-            <option value="Developer">Software Developer</option>
-            <option value="Designer">Software Designer</option>
+            <option disabled value="">Select a role</option>
+            <option value="developer">Software Developer</option>
+            <option value="designer">Software Designer</option>
         </select>
 
-        <!-- single checkbox -->
-         <div>
-            <input type="checkbox" v-model="accept">
-            <label for="">Accept Terms and Conditions</label>
-         </div>
+        <!-- Multiple Checkbox -->
+        <div>
+            <label>Gender</label>
+            <div>
+                <input type="checkbox" value="male" v-model="gender">
+                <label>Male</label>
+            </div>
+            <div>
+                <input type="checkbox" value="female" v-model="gender">
+                <label>Female</label>
+            </div>
+            <div>
+                <input type="checkbox" value="gay" v-model="gender">
+                <label>Gay</label>
+            </div>
+            <div>
+                <input type="checkbox" value="bisexual" v-model="gender">
+                <label>Bisexual</label>
+            </div>
+        </div>
 
-         <!-- multiple checkboxes -->
-          <label for="">Choose Gender</label>
-          <div>
-            <input type="checkbox" value="Male" v-model="gender">
-            <label for="">Male</label>
-          </div>
-          <div>
-            <input type="checkbox" value="Female" v-model="gender">
-            <label for="">Female</label>
-          </div>
-          <div>
-            <input type="checkbox" value="Gay" v-model="gender">
-            <label for="">Gay</label>
-          </div>
-          <div>
-            <input type="checkbox" value="Bisexual" v-model="gender">
-            <label for="">Bisexual</label>
-          </div>
-
-          <div>
-            <label for="">Skills</label>
-            <input type="text" @keyup="addSkill" v-model="skill">
-          </div>
-
-          <div class="skillsContainer">
+        <label>Skills</label>
+        <input type="text" v-model="skill" @keydown.enter.prevent="addSkill">
+        <div class="skillContainer">
             <p v-for="skill in skills" :key="skill" class="skill">
                 {{ skill }} <span class="cross" @click="deleteSkill(skill)">&#10006;</span>
             </p>
-          </div>
+        </div>
 
-          <div class="align">
+        <!-- Singel Checkbox -->
+        <div>
+            <input type="checkbox" v-model="accept">
+            <label>Accept Terms and Conditions</label>
+        </div>
+
+        <div class="align">
             <button>Create Account</button>
-          </div>
+        </div>
 
     </form>
 
@@ -62,130 +65,171 @@
     <p>Role - {{ role }}</p>
     <p>Accept - {{ accept }}</p>
     <p>Gender - {{ gender }}</p>
-
+    <p>Skills - {{ skills }}</p>
 </template>
 
 <script>
+import { ref, watch } from 'vue';
+
 export default {
-    data(){
-        return{
-            email : "name@gmail.com",
-            password : "",
-            role : "",
-            accept : false,
-            gender : [],
-            skills : [],
-            skill : "",
-            errMsg : "",
-            isError : false
-        }
-    },
-    methods: {
-        addSkill(e){
-           if(e.key === "Enter" && this.skill){
-            this.skills.push(this.skill)
-            this.skill = ""
-           }
-        },
-        deleteSkill(skill){
-            this.skills = this.skills.filter((loopskill => loopskill != skill))
-        },
-        Submit(){
-            if(this.password.length < 8){
-                this.errMsg = "Password must be at least 8 characters"
-                this.isError = true
-                this.$refs.pass.focus()
+    setup() {
+        let email = ref('')
+        let password = ref('')
+        let role = ref('')
+        let accept = ref(false)
+        let gender = ref([])
+        let skill = ref('')
+        let skills = ref([])
+        let EisErr = ref(false)
+        let PisErr = ref(false)
+        let EerrMsg = ref('')
+        let PerrMsg = ref('')
+
+        // Watchers to clear error messages on valid input
+        watch(email, (newValue) => {
+            if (newValue !== '' && newValue.endsWith('@gmail.com')) {
+                EisErr.value = false;
+                EerrMsg.value = '';
             }
-            else{
-                console.log('submitted')
-                this.isError = false
+        });
+
+        watch(password, (newValue) => {
+            if (newValue.length >= 8) {
+                PisErr.value = false;
+                PerrMsg.value = '';
+            }
+        });
+
+
+        let addSkill = () => {
+            if (!skills.value.includes(skill.value) && skill.value) {
+                skills.value.push(skill.value)
+                skill.value = ''
+            }
+            else skill.value = ''
+        }
+
+        let deleteSkill = (skill) => {
+            skills.value = skills.value.filter(s => s !== skill)
+        }
+
+        let Submit = () => {
+            // Initialize error flags and messages
+            EisErr.value = false;
+            PisErr.value = false;
+            EerrMsg.value = '';
+            PerrMsg.value = '';
+
+            // Email validation
+            if (email.value === '' || !email.value.endsWith('@gmail.com')) {
+                EisErr.value = true;
+                EerrMsg.value = 'Invalid Email. Please enter a valid email!';
+            }
+
+            // Password validation
+            if (password.value.length < 8) {
+                PisErr.value = true;
+                PerrMsg.value = 'Password must be at least 8 characters';
+            }
+
+            // If there are no errors, proceed with form submission
+            if (!EisErr.value && !PisErr.value) {
+                console.log('submitted');
+                // Handle successful submission here
             }
         }
+
+        return { email, password, role, accept, gender, skills, addSkill, skill, deleteSkill, Submit, EisErr, EerrMsg, PerrMsg, PisErr }
     }
 }
 </script>
 
 <style>
-form{
-    max-width: 420px;
-    background-color: white;
-    margin: 30px auto;
+form {
+    max-width: 620px;
+    background: white;
+    padding: 40px;
+    margin: 10px auto;
     border-radius: 10px;
-    padding: 30px;
     text-align: left;
 }
-label{
-    font-size: 0.6rem;
+
+label {
+    display: inline-block;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: bold;
-    color: #aaa;
-    display: inline-block;
-    margin: 25px 0 15px;
-}
-input, select{
-    display: block;
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #ddd;
-    padding: 10px 6px;
-    box-sizing: border-box;
-    transition:  border-bottom 0.3s ease;
-}
-.pw{
-    border-bottom: 2px solid crimson;
-}
-.pw:focus{
-    border-bottom: 2px solid crimson;
-}
-input[type="checkbox"]{
-    display: inline-block;
-    width: 16px;
-    top: 2px;
-    position: relative;
-    margin-right: 5px;
-}
-input:focus, select:focus{
-    outline: none;
-    border-bottom: 2px solid #aaa;
-}
-input::placeholder{
-    color: #ddd;
-}
-.cross{
-    color: crimson;
-    margin-left: 10px;
-    cursor: pointer;
-}
-.skillContainer{
-    display: flex;
-    flex-wrap: wrap;
-}
-.skill{
-    display: inline-block;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 30px;
-    margin: 10px 5px;
-}
-.align{
-    text-align: center;
-    margin-top: 30px;
-}
-button{
-    border: none;
-    background: royalblue;
-    padding: 15px 20px;
-    color: white;
-    border-radius: 10px;
-}
-button:hover{
-    opacity: 0.8;
-    cursor: pointer;
-}
-.error{
     font-size: 0.6rem;
-    color: crimson;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #aaa;
+    margin: 25px 0 5px 0;
 }
 
+input,
+select {
+    display: block;
+    padding: 10px 5px;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    outline: none;
+    margin-top: 10px;
+    transition: border-bottom 0.5s;
+}
+
+input[type="checkbox"] {
+    display: inline-block;
+    width: 16px;
+    position: relative;
+    top: 2px;
+}
+
+input::placeholder {
+    color: #ddd;
+}
+.red:focus{
+    border-bottom: 1px solid red;
+}
+
+input:focus {
+    border-bottom: 1px solid #222;
+}
+
+.cross {
+    color: red;
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+.skill {
+    border: 1px solid black;
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 15px;
+}
+
+button {
+    background: royalblue;
+    color: #ddd;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: rgb(43, 81, 192);
+}
+
+.align {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.error {
+    font-size: 0.6rem;
+    color: red;
+}
 </style>
